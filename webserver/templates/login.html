@@ -2,18 +2,29 @@
 <html>
 <head>
 	<title>Login Page</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-	<h1>Login</h1>
-	<form action="/login" method="post">
-		<label for="email">Email:</label>
-		<input type="text" id="email" name="email"><br>
 
-		<label for="password">Password:</label>
-		<input type="password" id="password" name="password"><br>
+	<div class="container">
+		<h1>Login</h1>
+		<form action="/login" method="post">
+		<div class="form-group">
+			<label for="email">Email:</label>
+			<input type="text" id="email" name="email"><br>
+		</div>
 
-		<input type="submit" value="Login">
-	</form>
+		<div class="form-group">
+			<label for="password">Password:</label>
+			<input type="password" id="password" name="password"><br>
+		</div>
+
+
+		<button type="Login">Login</button>
+		</form>
 	<p>Don't have an account? <a href="/register">Register</a></p>
+
+	</div>
+
 </body>
 </html>

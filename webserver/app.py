@@ -8,9 +8,9 @@ app.secret_key = 'mysecretkey'
 
 mysql = MySQL(app)
 app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'password'
-app.config['MYSQL_DB'] = 'users'
+app.config['MYSQL_USER'] = 'testuser'
+app.config['MYSQL_PASSWORD'] = 'tspas'
+app.config['MYSQL_DB'] = 'logindb'
 
 @app.route('/')
 def home():
@@ -27,11 +27,12 @@ def login():
         if user:
             session['loggedin'] = True
             session['id'] = user['id']
-            session['username'] = user['username']
+            session['email'] = user['email']
             return redirect(url_for('dashboard'))
         else:
             message = 'Invalid email or password'
             return render_template('login.html', message=message)
+            print("Invalid email or password")
     else:
         if 'loggedin' in session:
             return redirect(url_for('dashboard'))
@@ -41,9 +42,11 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+        firstname = request.form['first-name']
+        lastname = request.form['last-name']
+
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         cursor.execute('SELECT * FROM users WHERE email = %s', (email,))
         user = cursor.fetchone()
@@ -51,7 +54,7 @@ def register():
             message = 'Email already exists'
             return render_template('register.html', message=message)
         else:
-            cursor.execute('INSERT INTO users VALUES (NULL, %s, %s, %s)', (username, email, password,))
+            cursor.execute('INSERT INTO users VALUES (NULL, %s, %s, %s,%s)', (firstname,lastname, email, password))
             mysql.connection.commit()
             message = 'You have successfully registered'
             return render_template('register.html', message=message)
@@ -74,3 +77,4 @@ def logout():
 
 if __name__ == '__main__':
     app.run(debug=True)
+
